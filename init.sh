@@ -6,7 +6,6 @@ USERNAME=`git config user.username`
 EMAIL=`git config user.email`
 
 read -p 'project codename: ' PROJECT_NAME
-git remote set-url origin "git@github.com:$USERNAME/$PREFIX-$PROJECT_NAME.git"
 
 # log
 cat << EOC
@@ -35,6 +34,15 @@ do
 done
 
 # install dependencies
+echo -e '\nInstalling dependencies ...\n'
 [[ '`which yarn 2>/dev/null`' ]] && yarn 1>/dev/null || npm i 1>/dev/null
 
+# housecleanig
 rm $0
+
+# re-init repo
+rm -rf .git \
+  && git init \
+  && git add . \
+  && git commit -am 'Challenge Accepted!' \
+  && git remote add origin "git@github.com:$USERNAME/$PREFIX-$PROJECT_NAME.git"
